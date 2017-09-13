@@ -12,18 +12,33 @@ public class EyeReader {
 	private ArrayList<BufferedImage> openImgs;
 	private ArrayList<BufferedImage> closedImgs;
 	
+	/**
+	 * Basic constructor. Just initializes the data containers needed for the
+	 * training set.
+	 */
 	public EyeReader () {
 		openImgs = new ArrayList<BufferedImage>();
 		closedImgs = new ArrayList<BufferedImage>();
 	}
 	
+	/**
+	 * Add an image of an open eye to the training set
+	 * @param img
+	 */
 	public void addOpen (BufferedImage img) {
 		openImgs.add(img);
 	}
+	/**
+	 * Add an image of a closed eye to the training set
+	 * @param img
+	 */
 	public void addClosed (BufferedImage img) {
 		closedImgs.add(img);
 	}
 	
+	/**
+	 * Updates the current threshold between open and closed eyes
+	 */
 	public void calc () {
 		//if (openImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more openEye images.");
 		//if (closedImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more closedEye images.");
@@ -42,6 +57,11 @@ public class EyeReader {
 		threshold = (openAvg + closedAvg) / 2;
 	}
 	
+	/**
+	 * Determines whether an image is of an open eye or a closed eye
+	 * @param img
+	 * @return true if the eye is open false if it is not
+	 */
 	public boolean isOpen (BufferedImage img) {
 		if (getWhiteness(img) > threshold) {
 			return true;
@@ -50,6 +70,14 @@ public class EyeReader {
 		}
 	}
 	
+	/**
+	 * Gets the amount of white/gray pixels are in the image. With the main concept that pictures of 
+	 * open eyes would have more white/gray in them than a picture that doesn't contain the eyeball 
+	 * AKA the eye lid would be covering it.
+	 * @param img
+	 * @return The amount of pixels that are seen as white/gray due to their RGB values being close
+	 * enough to each other
+	 */
 	private int getWhiteness (BufferedImage img) {
 		int sum = 0;
 		for (int y = 0; y < img.getHeight(); y++) {
