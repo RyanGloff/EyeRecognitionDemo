@@ -16,6 +16,7 @@ public class EyeReaderTesting {
 		// Creating the EyeReader, trainSet and testSet
 		EyeReader er = new EyeReader();
 		File testDir = new File("res/testEyes/");
+		System.out.println(testDir.listFiles().length);
 		ArrayList<BufferedImage> openTestImgs = new ArrayList<BufferedImage>();
 		ArrayList<BufferedImage> closedTestImgs = new ArrayList<BufferedImage>();
 		for (File file : testDir.listFiles()) {
@@ -66,7 +67,7 @@ public class EyeReaderTesting {
 		}
 		System.out.println("Succeeded: " + succ);
 		System.out.println("Failed: " + fail);
-		System.out.println("Success Rate: " + (fail != 0 ? ((double)succ / fail) : 1d));
+		System.out.println("Success Rate: " + (fail != 0 ? ((double)succ / (fail + succ)) : 1d));
 		
 	}
 	

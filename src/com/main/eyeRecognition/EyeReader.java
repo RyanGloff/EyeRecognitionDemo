@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class EyeReader {
 
-	private int tolerance = 20;
+	private int tolerance = 30;
 	private double threshold = 0;
 	
 	private ArrayList<BufferedImage> openImgs;
@@ -25,8 +25,8 @@ public class EyeReader {
 	}
 	
 	public void calc () {
-		if (openImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more openEye images.");
-		if (closedImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more closedEye images.");
+		//if (openImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more openEye images.");
+		//if (closedImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more closedEye images.");
 		
 		int openAvg = 0;
 		for (BufferedImage img : openImgs) {
@@ -58,7 +58,7 @@ public class EyeReader {
 				int r = c.getRed();
 				int g = c.getGreen();
 				int b = c.getBlue();
-				if (Math.abs(r - b) + Math.abs(r - g) + Math.abs(b - g) > tolerance) {
+				if (Math.abs(r - b) + Math.abs(r - g) + Math.abs(b - g) < tolerance) {
 					sum++;
 				}
 			}
