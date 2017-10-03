@@ -16,7 +16,7 @@ public class EyeReaderTesting {
 		// Creating the EyeReader, trainSet and testSet
 		EyeReader er = new EyeReader();
 		File testDir = new File("res/testEyes/");
-		System.out.println(testDir.listFiles().length);
+		System.out.println("NumFiles: " + testDir.listFiles().length);
 		ArrayList<BufferedImage> openTestImgs = new ArrayList<BufferedImage>();
 		ArrayList<BufferedImage> closedTestImgs = new ArrayList<BufferedImage>();
 		for (File file : testDir.listFiles()) {
@@ -43,6 +43,9 @@ public class EyeReaderTesting {
 			}
 		}
 		er.calc();
+		System.out.println("EyeReader Threshold: " + er.getThreshold());
+		System.out.println("Open average: " + er.getAvgOpenWhiteness());
+		System.out.println("Closed average: " + er.getAvgClosedWhiteness());
 		
 		// Testing the test set
 		int succ = 0;

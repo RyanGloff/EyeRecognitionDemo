@@ -9,6 +9,9 @@ public class EyeReader {
 	private int tolerance = 30;
 	private double threshold = 0;
 	
+	private int openAvg;
+	private int closedAvg;
+	
 	private ArrayList<BufferedImage> openImgs;
 	private ArrayList<BufferedImage> closedImgs;
 	
@@ -43,13 +46,13 @@ public class EyeReader {
 		//if (openImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more openEye images.");
 		//if (closedImgs.size() < 5) throw new IllegalStateException("Not enough training data. Add more closedEye images.");
 		
-		int openAvg = 0;
+		openAvg = 0;
 		for (BufferedImage img : openImgs) {
 			openAvg += getWhiteness(img);
 		}
 		openAvg /= openImgs.size();
 		
-		int closedAvg = 0;
+		closedAvg = 0;
 		for (BufferedImage img : closedImgs) {
 			closedAvg += getWhiteness(img);
 		}
@@ -68,6 +71,29 @@ public class EyeReader {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Gets the whiteness threshold for determining whether eye is open or closed
+	 * @return The threshold for open/closed
+	 */
+	public double getThreshold () {
+		return threshold;
+	}
+	
+	/**
+	 * Gets the average whiteness score for open states
+	 * @return Average whiteness of the open state
+	 */
+	public double getAvgOpenWhiteness () {
+		return openAvg;
+	}
+	/**
+	 * Gets the average whiteness score for the closed states
+	 * @return Average whiteness of the closed state
+	 */
+	public double getAvgClosedWhiteness () {
+		return closedAvg;
 	}
 	
 	/**
