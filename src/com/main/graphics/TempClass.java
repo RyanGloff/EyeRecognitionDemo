@@ -18,7 +18,7 @@ public class TempClass extends Application{
 		StackPane pane = new StackPane();
 		pane.getChildren().add(zoomView);
 		pane.setAlignment(Pos.CENTER);
-		Scene scene = new Scene(pane,1500,1000);
+		Scene scene = new Scene(pane, 1500, 1000);
 		
 		//press spacebar to zoom in by a little, this will be changed to getting a value from eye reader
 		scene.setOnKeyPressed(e->{
