@@ -2,7 +2,6 @@
 
 package com.main.graphics;
 
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,14 +9,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-
-
 public class TempClass extends Application{
 	
 	public void start(Stage primaryStage) {
 		//create ImageZoom which extends ImageView
 		//must change file path name to correct location 
-		ImageZoom zoomView = new ImageZoom("file:C:/Users/User/eclipse-workspace/EyeRecognitionDemo/src/com/main/graphics/testImage.png");
+		ImageZoom zoomView = new ImageZoom("res/testImage.png");
 		StackPane pane = new StackPane();
 		pane.getChildren().add(zoomView);
 		pane.setAlignment(Pos.CENTER);

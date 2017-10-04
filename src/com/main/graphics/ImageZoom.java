@@ -1,12 +1,11 @@
 package com.main.graphics;
 
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class ImageZoom extends ImageView{
+public class ImageZoom extends ImageView {
 
 	private DoubleProperty zoomProperty = new SimpleDoubleProperty(300);
 	
@@ -15,7 +14,7 @@ public class ImageZoom extends ImageView{
 	
 	//Constructor: given the image path name 
 	public ImageZoom(String imagePath) {
-		this.setImage(new Image(imagePath));  
+		this.setImage(new Image("file:" + imagePath));  
 		this.setPreserveRatio(true);
 	}
 	
