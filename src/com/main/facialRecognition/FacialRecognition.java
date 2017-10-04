@@ -1,7 +1,13 @@
 package com.main.facialRecognition;
 
+import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -10,14 +16,54 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
 
-class FacialRecognition 
+class FacialRecognition implements Runnable
 {
 	private CascadeClassifier faceDetector;
 	private CascadeClassifier eyeDetector;
 	private VideoCapture capture;
 	private BufferedImage faceFrame;
 	private EyeRect eye;
-
+	private Thread thread;
+	private boolean running;
+	
+	public static void main(String[] args) {
+		FacialRecognition facialThread = new FacialRecognition();
+		facialThread.start();
+		facialThread.halt();
+	}
+	
+	@Override
+	public void run() {
+		FacialRecognition faceDetector = new FacialRecognition();
+		JFrame window = new JFrame("Facial Recognition");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(500, 500);
+		faceDetector.runFacialRecognition();
+		JLabel label = new JLabel(new ImageIcon(faceDetector.getFaceFrame()));
+		window.getContentPane().setLayout(new FlowLayout());
+		window.getContentPane().add(label);
+		window.pack();
+		window.setVisible(true);
+		
+		while(running) {			
+			faceDetector.runFacialRecognition();
+			label.setIcon(new ImageIcon(faceDetector.getFaceFrame()));
+		}
+	}
+	
+	public synchronized void start() {
+		if (running) {
+			return;
+		}
+		thread = new Thread(this);
+		thread.start();
+		running = true;
+	}
+	
+	public void halt() {
+		running = false;
+	}
+	
 	//loads opencv lib, cascadeclassifiers for eyes and face, and opens videostream to webcam
 	public FacialRecognition() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
