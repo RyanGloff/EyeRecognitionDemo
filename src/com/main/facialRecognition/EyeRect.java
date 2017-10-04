@@ -1,22 +1,23 @@
 package com.main.facialRecognition;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import org.opencv.core.Rect;
 //container class for eye location on screen
 class EyeRect {
-	private Point2D.Double topLeft;
-	private Point2D.Double topRight;
-	private Point2D.Double botLeft;
-	private Point2D.Double botRight;
+	private Point topLeft;
+	private Point topRight;
+	private Point botLeft;
+	private Point botRight;
 	private int width;
 	private int height;
 	
 	public EyeRect(Rect eye) {
-		topLeft = new Point2D.Double(eye.x, eye.y);
-		topRight = new Point2D.Double((eye.x + eye.width), eye.y);
-		botLeft = new Point2D.Double(eye.x, (eye.y - eye.height));
-		botRight = new Point2D.Double((eye.x + eye.width), (eye.y - eye.height));
+		topLeft = new Point(eye.x, eye.y);
+		topRight = new Point((eye.x + eye.width), eye.y);
+		botLeft = new Point(eye.x, (eye.y - eye.height));
+		botRight = new Point((eye.x + eye.width), (eye.y - eye.height));
 		this.width = eye.width;
 		this.height = eye.height;
 	}

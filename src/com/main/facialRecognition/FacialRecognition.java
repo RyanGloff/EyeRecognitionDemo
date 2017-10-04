@@ -1,11 +1,7 @@
 package com.main.facialRecognition;
 
-import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -21,30 +17,13 @@ class FacialRecognition
 	private VideoCapture capture;
 	private BufferedImage faceFrame;
 	private EyeRect eye;
-	
-	public static void main(String [] args) {
-		
-		FacialRecognition faceDetector = new FacialRecognition();
-		faceDetector.runFacialRecognition();
-		JFrame window = new JFrame("Facial Recognition");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(500, 500);
-		JLabel label = new JLabel(new ImageIcon(faceDetector.getFaceFrame()));
-		window.getContentPane().setLayout(new FlowLayout());
-		window.getContentPane().add(label);
-		window.pack();
-		window.setVisible(true);
-		
-		while(true) {
-			faceDetector.runFacialRecognition();
-			label.setIcon(new ImageIcon(faceDetector.faceFrame));
-		}
-	}
+
 	//loads opencv lib, cascadeclassifiers for eyes and face, and opens videostream to webcam
 	public FacialRecognition() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		faceDetector = new CascadeClassifier("lbpcascade_frontalface.xml");
 		eyeDetector = new CascadeClassifier("haarcascade_eye.xml");
+		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
 		capture = new VideoCapture(0);
 	}
 	
@@ -65,6 +44,9 @@ class FacialRecognition
 					}
 				}
 			}	
+		}
+		else {
+			System.out.println("No video device could be opened");
 		}
 	}
 	//converts Mat to array of bytes to a bufferedimage for easier display
