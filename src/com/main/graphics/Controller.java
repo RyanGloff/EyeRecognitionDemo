@@ -41,7 +41,7 @@ public class Controller {
 		if (faceRec.getEyeRect().getY() < 100) {
 			zoom += zoomPercent;
 		} else if (faceRec.getEyeRect().getY() > 400) {
-			zoom += zoomPercent;
+			zoom -= zoomPercent;
 		}
 	}
 	/**
