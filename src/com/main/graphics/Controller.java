@@ -38,6 +38,11 @@ public class Controller {
 	 */
 	public void update () {
 		System.out.println(faceRec.getEyeRect().getX() + ", " + faceRec.getEyeRect().getY());
+		if (faceRec.getEyeRect().getY() < 100) {
+			zoom += zoomPercent;
+		} else if (faceRec.getEyeRect().getY() > 400) {
+			zoom += zoomPercent;
+		}
 	}
 	/**
 	 * Draws to the screen
