@@ -5,7 +5,10 @@ import java.awt.geom.Point2D;
 
 import org.opencv.core.Rect;
 //container class for eye location on screen
-class EyeRect {
+public class EyeRect {
+	
+	private Rect eye;
+	
 	private Point topLeft;
 	private Point topRight;
 	private Point botLeft;
@@ -14,6 +17,7 @@ class EyeRect {
 	private int height;
 	
 	public EyeRect(Rect eye) {
+		this.eye = eye;
 		topLeft = new Point(eye.x, eye.y);
 		topRight = new Point((eye.x + eye.width), eye.y);
 		botLeft = new Point(eye.x, (eye.y - eye.height));
@@ -22,11 +26,21 @@ class EyeRect {
 		this.height = eye.height;
 	}
 	
-	public void printPoints() {
-		System.out.println("topLeft: " + topLeft.toString());
-		System.out.println("topRight: " + topRight.toString());
-		System.out.println("botLeft: " + botLeft.toString());
-		System.out.println("botRight: " + botRight.toString());
+	@Override
+	public String toString() {
+		String str = "";
+		str += "topLeft: " + topLeft.toString() + "\n";
+		str += "topRight: " + topRight.toString() + "\n";
+		str += "botLeft: " + botLeft.toString() + "\n";
+		str += "botRight: " + botRight.toString() + "\n";
+		return str;
+	}
+	
+	public int getX () {
+		return eye.x;
+	}
+	public int getY () {
+		return eye.y;
 	}
 	
 	public Point2D getTopLeft() {

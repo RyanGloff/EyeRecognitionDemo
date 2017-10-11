@@ -16,7 +16,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
 
-class FacialRecognition implements Runnable
+public class FacialRecognition implements Runnable
 {
 	private CascadeClassifier faceDetector;
 	private CascadeClassifier eyeDetector;
@@ -36,7 +36,7 @@ class FacialRecognition implements Runnable
 	public void run() {
 		FacialRecognition faceDetector = new FacialRecognition();
 		JFrame window = new JFrame("Facial Recognition");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		window.setSize(500, 500);
 		faceDetector.runFacialRecognition();
 		JLabel label = new JLabel(new ImageIcon(faceDetector.getFaceFrame()));
@@ -85,8 +85,7 @@ class FacialRecognition implements Runnable
 				if(detectFaces(frame)) {
 					detectEyes(frame);
 					if(eye != null) {
-						System.out.println("eye rect created");
-						eye.printPoints();
+						System.out.println(eye.toString());
 					}
 				}
 			}	
