@@ -14,7 +14,7 @@ public class Controller {
 	private BufferedImage testImg = null;
 	
 	private double zoom = 1.0;      //scaling factor
-	private double zoomPercent= .5; //how much to zoom in each time
+	private double zoomPercent= .05; //how much to zoom in each time
 	
 	public Controller () {
 		// Loading the image from the file system
@@ -37,10 +37,11 @@ public class Controller {
 	 */
 	public void render (Graphics g) {
 		// Drawing an image to the screen
-		//convert to Graphics2D to be able to use scale
+		// convert to Graphics2D to be able to use scale
 		Graphics2D g2D = (Graphics2D) g;
+		g2D.translate(testImg.getWidth() / 2, testImg.getHeight() / 2);
 		g2D.scale(zoom,zoom);
-		g.drawImage(testImg, 0, 0, null);
+		g.drawImage(testImg, -1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2, null);
 	}
 	
 	/**
@@ -48,8 +49,16 @@ public class Controller {
 	 * @param e - Holds all of the information about the key. Ex) Specific button
 	 */
 	public void keyPressed (KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_UP:
 			zoom += zoomPercent;
+			break;
+		case KeyEvent.VK_DOWN:
+			zoom -= zoomPercent;
+			break;
+		default:
+			System.out.println("Warning: Key not mapped to any action.");
+			break;
 		}
 	}
 	/**
