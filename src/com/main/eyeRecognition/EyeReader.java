@@ -35,6 +35,7 @@ public class EyeReader {
 	public void train (String folderPath) {
 		File testDir = new File(folderPath);
 		System.out.println("NumFiles: " + testDir.listFiles().length);
+		if (testDir.listFiles().length == 0) return;
 		for (File file : testDir.listFiles()) {
 			BufferedImage testImg = null;
 			try {

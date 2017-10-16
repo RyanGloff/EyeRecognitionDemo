@@ -3,7 +3,10 @@ package com.main.facialRecognition;
 import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -147,22 +150,22 @@ public class FacialRecognition implements Runnable
 			eye = new EyeRect(eyeArray[0]);
 			// Export to file system for now
 			BufferedImage eyeImg = faceFrame.getSubimage(eye.getX(), eye.getY(), eye.getWidth(), eye.getHeight());
-			System.out.println("Img size: " + eyeImg.getWidth() + " by " + eyeImg.getHeight());
-			System.out.println("Eyes Open: " + eyeReader.isOpen(eyeImg) + "\tValue: " + eyeReader.getWhiteness(eyeImg));
+			System.out.println("Value: " + eyeReader.getWhiteness(eyeImg));
 			eyesOpen = eyeReader.isOpen(eyeImg);
-			/*
-			int i = 0;
-			File eyeSaveLocation = new File("res/EyeImages/img" + i + ".png");
+			
+			//Adding to the training set
+			/*int i = 0;
+			File eyeSaveLocation = new File("res/EyeImages/newImg" + i + ".png");
 			while (eyeSaveLocation.exists()) {
 				i++;
-				eyeSaveLocation = new File("res/EyeImages/img" + i + ".png");
+				eyeSaveLocation = new File("res/EyeImages/newImg" + i + ".png");
 			}
 			try {
 				ImageIO.write(eyeImg, "png", eyeSaveLocation);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			*/
+			}*/
+			
 		}
 	}
 	//getter function for the faceFrame
