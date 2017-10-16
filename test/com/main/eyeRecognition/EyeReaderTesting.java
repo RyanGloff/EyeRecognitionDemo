@@ -15,7 +15,7 @@ public class EyeReaderTesting {
 	public void eyeReaderTesting () {
 		// Creating the EyeReader, trainSet and testSet
 		EyeReader er = new EyeReader();
-		File testDir = new File("res/testEyes/");
+		File testDir = new File("res/EyeImages/");
 		System.out.println("NumFiles: " + testDir.listFiles().length);
 		ArrayList<BufferedImage> openTestImgs = new ArrayList<BufferedImage>();
 		ArrayList<BufferedImage> closedTestImgs = new ArrayList<BufferedImage>();

@@ -57,7 +57,7 @@ public class Screen extends Canvas implements Runnable, KeyListener {
 				fps = frames;
 				frames = 0;
 				startSecond += 1000;
-				System.out.println("FPS: " + fps);
+				//System.out.println("FPS: " + fps);
 			}
 		}
 		controller.clean();

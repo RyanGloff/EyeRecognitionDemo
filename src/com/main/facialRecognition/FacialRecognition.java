@@ -13,8 +13,10 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.videoio.VideoCapture;
+
+import com.main.eyeRecognition.EyeReader;
 
 public class FacialRecognition implements Runnable
 {
@@ -23,38 +25,38 @@ public class FacialRecognition implements Runnable
 	private VideoCapture capture;
 	private BufferedImage faceFrame;
 	private EyeRect eye;
+	
+	private EyeReader eyeReader;
+	private boolean eyesOpen = true;
+	
 	private Thread thread;
 	private boolean running;
 	
-	public static void main(String[] args) {
-		FacialRecognition facialThread = new FacialRecognition();
-		facialThread.start();
-		facialThread.halt();
-	}
-	
 	@Override
 	public void run() {
-		FacialRecognition faceDetector = new FacialRecognition();
+		eyeReader = new EyeReader();
+		eyeReader.train("res/EyeImages/");
 		JFrame window = new JFrame("Facial Recognition");
-		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(500, 500);
-		faceDetector.runFacialRecognition();
-		JLabel label = new JLabel(new ImageIcon(faceDetector.getFaceFrame()));
 		window.getContentPane().setLayout(new FlowLayout());
+		JLabel label = new JLabel();
 		window.getContentPane().add(label);
-		window.pack();
 		window.setVisible(true);
-		
-		while(running) {			
-			faceDetector.runFacialRecognition();
-			label.setIcon(new ImageIcon(faceDetector.getFaceFrame()));
+		long startTime = System.nanoTime();
+		while(running) {
+			runFacialRecognition();
+			label.setIcon(new ImageIcon(faceFrame));
+			
+			long currentTime = System.nanoTime();
+			double dTime = (double)(currentTime - startTime) / 1000000000;
+			//System.out.println("Elapsed Time: " + dTime + " seconds");
+			startTime = currentTime;
 		}
 	}
 	
 	public synchronized void start() {
-		if (running) {
-			return;
-		}
+		if (running) return;
 		thread = new Thread(this);
 		thread.start();
 		running = true;
@@ -73,28 +75,29 @@ public class FacialRecognition implements Runnable
 		capture = new VideoCapture(0);
 	}
 	
-	public void runFacialRecognition() {	
+	public void runFacialRecognition() {
 		Mat frame = new Mat();
 		capture.open(0);
 		
 		if(capture.isOpened()) {
 			capture.read(frame);
-			if(!frame.empty())
-			{
+			if(!frame.empty()) {
 				matToImage(frame);
 				if(detectFaces(frame)) {
 					detectEyes(frame);
 					if(eye != null) {
-						System.out.println(eye.toString());
+						//System.out.println(eye.toString());
 					}
+				} else {
+					eye = null;
 				}
 			}	
-		}
-		else {
-			System.out.println("No video device could be opened");
+		} else {
+			System.err.println("Error: No video device could be opened");
+			System.exit(1);
 		}
 	}
-	//converts Mat to array of bytes to a bufferedimage for easier display
+	//converts Mat to array of bytes to a buffered image for easier display
 	public void matToImage(Mat original) {
 		int width = original.width();
 		int height = original.height();
@@ -116,13 +119,17 @@ public class FacialRecognition implements Runnable
 		Imgproc.equalizeHist(mGrey, mGrey);
 		faceDetector.detectMultiScale(mGrey, faces);
 		
+		return faces.toArray().length > 0;
+		
+		/* Way to complicated
 		if(faces.toArray().length > 0) {
-			System.out.println("faceDetected");
+			System.out.println("Face detected");
 			return true;
 		}
 		else {
+			System.out.println("Failed to detect face");
 			return false;
-		}
+		}*/
 	}
 	//uses opencv to detect eyes from cascade classifier
 	public void detectEyes(Mat frame) {
@@ -137,8 +144,25 @@ public class FacialRecognition implements Runnable
 		Rect[] eyeArray = eyes.toArray();
 		
 		if(eyeArray.length > 0) {
-			System.out.println("Eyes detected");
 			eye = new EyeRect(eyeArray[0]);
+			// Export to file system for now
+			BufferedImage eyeImg = faceFrame.getSubimage(eye.getX(), eye.getY(), eye.getWidth(), eye.getHeight());
+			System.out.println("Img size: " + eyeImg.getWidth() + " by " + eyeImg.getHeight());
+			System.out.println("Eyes Open: " + eyeReader.isOpen(eyeImg) + "\tValue: " + eyeReader.getWhiteness(eyeImg));
+			eyesOpen = eyeReader.isOpen(eyeImg);
+			/*
+			int i = 0;
+			File eyeSaveLocation = new File("res/EyeImages/img" + i + ".png");
+			while (eyeSaveLocation.exists()) {
+				i++;
+				eyeSaveLocation = new File("res/EyeImages/img" + i + ".png");
+			}
+			try {
+				ImageIO.write(eyeImg, "png", eyeSaveLocation);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			*/
 		}
 	}
 	//getter function for the faceFrame
@@ -148,5 +172,8 @@ public class FacialRecognition implements Runnable
 	//getter function for the eyeRect/location
 	public EyeRect getEyeRect() {
 		return eye;
+	}
+	public boolean eyesOpen () {
+		return eyesOpen;
 	}
 }

@@ -16,7 +16,7 @@ public class Controller {
 	private BufferedImage testImg = null;
 	
 	private double zoom = 1.0;      //scaling factor
-	private double zoomPercent= .05; //how much to zoom in each time
+	private double zoomPercent= .005; //how much to zoom in each time
 	
 	private FacialRecognition faceRec;
 	
@@ -37,10 +37,9 @@ public class Controller {
 	 *  Update runs 60 times per second to update the current state of the program
 	 */
 	public void update () {
-		System.out.println(faceRec.getEyeRect().getX() + ", " + faceRec.getEyeRect().getY());
-		if (faceRec.getEyeRect().getY() < 100) {
+		if (faceRec.eyesOpen()) {
 			zoom += zoomPercent;
-		} else if (faceRec.getEyeRect().getY() > 400) {
+		} else {
 			zoom -= zoomPercent;
 		}
 	}

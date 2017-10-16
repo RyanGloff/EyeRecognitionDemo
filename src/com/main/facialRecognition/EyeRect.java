@@ -28,12 +28,7 @@ public class EyeRect {
 	
 	@Override
 	public String toString() {
-		String str = "";
-		str += "topLeft: " + topLeft.toString() + "\n";
-		str += "topRight: " + topRight.toString() + "\n";
-		str += "botLeft: " + botLeft.toString() + "\n";
-		str += "botRight: " + botRight.toString() + "\n";
-		return str;
+		return "{" + eye.x + ", " + eye.y + ", " + eye.width + ", " + eye.height + "}";
 	}
 	
 	public int getX () {

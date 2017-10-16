@@ -2,7 +2,11 @@ package com.main.eyeRecognition;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class EyeReader {
 
@@ -22,6 +26,34 @@ public class EyeReader {
 	public EyeReader () {
 		openImgs = new ArrayList<BufferedImage>();
 		closedImgs = new ArrayList<BufferedImage>();
+	}
+	
+	/**
+	 * Trains the reader for the images in the file system
+	 * @param folderPath - The path for the folder containing all of the training data
+	 */
+	public void train (String folderPath) {
+		File testDir = new File(folderPath);
+		System.out.println("NumFiles: " + testDir.listFiles().length);
+		for (File file : testDir.listFiles()) {
+			BufferedImage testImg = null;
+			try {
+				testImg = ImageIO.read(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if (testImg == null) throw new IllegalStateException("The image was not found");
+			switch (file.getName().charAt(0)) {
+			case 'O':
+				addOpen(testImg);
+				break;
+			case 'C':
+				addClosed(testImg);
+				break;
+			}
+		}
+		calc();
+		System.out.println("Whiteness Level: " + threshold);
 	}
 	
 	/**
@@ -104,7 +136,7 @@ public class EyeReader {
 	 * @return The amount of pixels that are seen as white/gray due to their RGB values being close
 	 * enough to each other
 	 */
-	private int getWhiteness (BufferedImage img) {
+	public int getWhiteness (BufferedImage img) {
 		int sum = 0;
 		for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
