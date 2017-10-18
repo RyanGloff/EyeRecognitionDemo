@@ -31,6 +31,8 @@ public class FacialRecognition implements Runnable
 	
 	private EyeReader eyeReader;
 	private boolean eyesOpen = true;
+	private boolean training = false;
+	private boolean open = true;
 	
 	private Thread thread;
 	private boolean running;
@@ -123,16 +125,6 @@ public class FacialRecognition implements Runnable
 		faceDetector.detectMultiScale(mGrey, faces);
 		
 		return faces.toArray().length > 0;
-		
-		/* Way to complicated
-		if(faces.toArray().length > 0) {
-			System.out.println("Face detected");
-			return true;
-		}
-		else {
-			System.out.println("Failed to detect face");
-			return false;
-		}*/
 	}
 	//uses opencv to detect eyes from cascade classifier
 	public void detectEyes(Mat frame) {
@@ -154,17 +146,27 @@ public class FacialRecognition implements Runnable
 			eyesOpen = eyeReader.isOpen(eyeImg);
 			
 			//Adding to the training set
-			/*int i = 0;
-			File eyeSaveLocation = new File("res/EyeImages/newImg" + i + ".png");
-			while (eyeSaveLocation.exists()) {
-				i++;
-				eyeSaveLocation = new File("res/EyeImages/newImg" + i + ".png");
+			if (training) {
+				int i = 0;
+				String path = "res/EyeImages/";
+				if (open) {
+					path += "Open";
+				} else {
+					path += "Closed";
+				}
+				File eyeSaveLocation = new File(path + i + ".png");
+				while (eyeSaveLocation.exists()) {
+					i++;
+					eyeSaveLocation = new File(path + i + ".png");
+				}
+				try {
+					ImageIO.write(eyeImg, "png", eyeSaveLocation);
+					System.out.println("Wrote eye to file.");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			try {
-				ImageIO.write(eyeImg, "png", eyeSaveLocation);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}*/
+			
 			
 		}
 	}
@@ -178,5 +180,18 @@ public class FacialRecognition implements Runnable
 	}
 	public boolean eyesOpen () {
 		return eyesOpen;
+	}
+	
+	public void toggleTraining () {
+		training = !training;
+	}
+	public void toggleOpen () {
+		open = !open;
+	}
+	public boolean getTraining () {
+		return training;
+	}
+	public boolean getOpen () {
+		return open;
 	}
 }

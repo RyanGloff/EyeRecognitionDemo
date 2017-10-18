@@ -1,5 +1,6 @@
 package com.main.graphics;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -15,7 +16,7 @@ public class Controller {
 
 	private BufferedImage testImg = null;
 	
-	private double zoom = 1.0;      //scaling factor
+	private double zoom = 0.1;      //scaling factor
 	private double zoomPercent= .005; //how much to zoom in each time
 	
 	private FacialRecognition faceRec;
@@ -23,7 +24,7 @@ public class Controller {
 	public Controller () {
 		// Loading the image from the file system
 		try {
-			testImg = ImageIO.read(new File("res/testImage.png"));
+			testImg = ImageIO.read(new File("res/TestImage.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +55,13 @@ public class Controller {
 		g2D.translate(testImg.getWidth() / 2, testImg.getHeight() / 2);
 		g2D.scale(zoom,zoom);
 		g.drawImage(testImg, -1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2, null);
+		g2D.scale(1 / zoom, 1 / zoom);
+		g2D.translate(-1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2);
+		// Drawing the training states
+		g.setColor(faceRec.getTraining() ? Color.WHITE : Color.BLACK);
+		g.fillRect(100, 100, 50, 50);
+		g.setColor(faceRec.getOpen() ? Color.WHITE : Color.BLACK);
+		g.fillRect(200, 100, 50, 50);
 	}
 	
 	/**
@@ -67,6 +75,12 @@ public class Controller {
 			break;
 		case KeyEvent.VK_DOWN:
 			zoom -= zoomPercent;
+			break;
+		case KeyEvent.VK_1:
+			faceRec.toggleTraining();
+			break;
+		case KeyEvent.VK_2:
+			faceRec.toggleOpen();
 			break;
 		default:
 			System.out.println("Warning: Key not mapped to any action.");

@@ -34,7 +34,7 @@ public class Screen extends Canvas implements Runnable, KeyListener {
 		window.setLocationRelativeTo(null);
 		window.setResizable(false);
 		window.setVisible(true);
-		window.addKeyListener(this);
+		addKeyListener(this);
 		
 		start();
 	}
