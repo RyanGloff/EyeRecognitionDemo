@@ -161,7 +161,7 @@ public class FacialRecognition implements Runnable
 				}
 				try {
 					ImageIO.write(eyeImg, "png", eyeSaveLocation);
-					System.out.println("Wrote eye to file.");
+					System.out.println("Wrote eye to file. [" + eyeSaveLocation.getAbsolutePath() + "]");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -193,5 +193,8 @@ public class FacialRecognition implements Runnable
 	}
 	public boolean getOpen () {
 		return open;
+	}
+	public EyeReader getEyeReader () {
+		return eyeReader;
 	}
 }

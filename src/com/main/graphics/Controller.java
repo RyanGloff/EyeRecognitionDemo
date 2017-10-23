@@ -10,16 +10,17 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.main.facialRecognition.*;
+import com.main.facialRecognition.FacialRecognition;
 
 public class Controller {
 
 	private BufferedImage testImg = null;
 	
 	private double zoom = 0.1;      //scaling factor
-	private double zoomPercent= .005; //how much to zoom in each time
+	private double zoomPercent= .00005; //how much to zoom in each time
 	
 	private FacialRecognition faceRec;
+	private EyeWindow ew;
 	
 	public Controller () {
 		// Loading the image from the file system
@@ -32,6 +33,9 @@ public class Controller {
 		// Facial Recognition
 		faceRec = new FacialRecognition();
 		faceRec.start();
+		
+		ew = new EyeWindow(faceRec);
+		
 	}
 	
 	/**
@@ -39,9 +43,9 @@ public class Controller {
 	 */
 	public void update () {
 		if (faceRec.eyesOpen()) {
-			zoom += zoomPercent;
-		} else {
 			zoom -= zoomPercent;
+		} else {
+			zoom += zoomPercent;
 		}
 	}
 	/**
@@ -52,16 +56,15 @@ public class Controller {
 		// Drawing an image to the screen
 		// convert to Graphics2D to be able to use scale
 		Graphics2D g2D = (Graphics2D) g;
-		g2D.translate(testImg.getWidth() / 2, testImg.getHeight() / 2);
+		//g2D.translate(testImg.getWidth() / 2, testImg.getHeight() / 2);
 		g2D.scale(zoom,zoom);
-		g.drawImage(testImg, -1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2, null);
+		g.drawImage(testImg, 0, 0, null);
 		g2D.scale(1 / zoom, 1 / zoom);
-		g2D.translate(-1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2);
+		//g2D.translate(-1 * testImg.getWidth() / 2, -1 * testImg.getHeight() / 2);
 		// Drawing the training states
-		g.setColor(faceRec.getTraining() ? Color.WHITE : Color.BLACK);
-		g.fillRect(100, 100, 50, 50);
-		g.setColor(faceRec.getOpen() ? Color.WHITE : Color.BLACK);
-		g.fillRect(200, 100, 50, 50);
+		g.setColor(Color.RED);
+		g.drawString((faceRec.getTraining() ? "Training" : "Not Training") + "   [1]", 100, 100);
+		g.drawString((faceRec.getOpen() ? "Open" : "Closed") + "   [2]", 100, 125);
 	}
 	
 	/**
@@ -91,19 +94,16 @@ public class Controller {
 	 * Runs any time a key is released on the keyboard
 	 * @param e - Holds all of the information about the key. Ex) Specific button
 	 */
-	public void keyReleased (KeyEvent e) {
-		
-	}
+	public void keyReleased (KeyEvent e) {}
 	/**
 	 * Runs any the a key is typed on the keyboard
 	 * @param e - Holds all of the information about the key. Ex) Specific button
 	 */
-	public void keyTyped (KeyEvent e) {
-		
-	}
+	public void keyTyped (KeyEvent e) {}
 	
 	public void clean () {
 		faceRec.halt();
+		ew.halt();
 	}
 	
 }
