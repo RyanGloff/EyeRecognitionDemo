@@ -17,7 +17,7 @@ public class Controller {
 	private BufferedImage testImg = null;
 	
 	private double zoom = 0.1;      //scaling factor
-	private double zoomPercent= .00005; //how much to zoom in each time
+	private double zoomPercent= .00025; //how much to zoom in each time
 	
 	private FacialRecognition faceRec;
 	private EyeWindow ew;

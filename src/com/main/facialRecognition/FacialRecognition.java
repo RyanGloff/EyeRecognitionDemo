@@ -75,7 +75,7 @@ public class FacialRecognition implements Runnable
 	public FacialRecognition() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		faceDetector = new CascadeClassifier("lbpcascade_frontalface.xml");
-		eyeDetector = new CascadeClassifier("haarcascade_eye.xml");
+		eyeDetector = new CascadeClassifier("haarcascade_righteye_2splits.xml");
 		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
 		capture = new VideoCapture(0);
 	}
