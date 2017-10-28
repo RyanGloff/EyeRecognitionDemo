@@ -65,6 +65,10 @@ public class Controller {
 		g.setColor(Color.RED);
 		g.drawString((faceRec.getTraining() ? "Training" : "Not Training") + "   [1]", 100, 100);
 		g.drawString((faceRec.getOpen() ? "Open" : "Closed") + "   [2]", 100, 125);
+		//separates mine and ryans code in case you fuck up
+		g.drawString((faceRec.getCurrentStream() ? "Camera" : "Files") + "   [3]", 100, 150);
+		g.drawString((faceRec.getIsRecording() ? "Recording" : "Not Recording") + "   [SPACE]", 100, 175);
+
 	}
 	
 	/**
@@ -84,6 +88,12 @@ public class Controller {
 			break;
 		case KeyEvent.VK_2:
 			faceRec.toggleOpen();
+			break;
+		case KeyEvent.VK_SPACE:
+			faceRec.toggleRecording();
+			break;
+		case KeyEvent.VK_3:
+			faceRec.toggleStream();
 			break;
 		default:
 			System.out.println("Warning: Key not mapped to any action.");

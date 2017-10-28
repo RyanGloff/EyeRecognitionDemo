@@ -15,9 +15,12 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.VideoWriter;
+import org.opencv.core.Size;
 
 import com.main.eyeRecognition.EyeReader;
 
@@ -28,14 +31,35 @@ public class FacialRecognition implements Runnable
 	private VideoCapture capture;
 	private BufferedImage faceFrame;
 	private EyeRect eye;
+	private File faceVideo;
 	
+	private int faceCounter;
+	private int faceVideoCounter;
+	private Mat frame;
 	private EyeReader eyeReader;
 	private boolean eyesOpen = true;
 	private boolean training = false;
 	private boolean open = true;
+	private boolean isRecording = false;
+	private boolean currentStream = true;
 	
 	private Thread thread;
 	private boolean running;
+	
+	//loads opencv lib, cascadeclassifiers for eyes and face, and opens videostream to webcam
+	public FacialRecognition() {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		
+		faceCounter = 0;
+		faceVideoCounter = 0;
+		frame = new Mat();
+		faceVideo = new File("res/FaceVideo");
+		faceDetector = new CascadeClassifier("lbpcascade_frontalface.xml");
+		eyeDetector = new CascadeClassifier("haarcascade_righteye_2splits.xml");
+		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
+		capture = new VideoCapture();
+		capture.open(0);
+		}
 	
 	@Override
 	public void run() {
@@ -68,24 +92,51 @@ public class FacialRecognition implements Runnable
 	}
 	
 	public void halt() {
+		capture.release();
 		running = false;
 	}
 	
-	//loads opencv lib, cascadeclassifiers for eyes and face, and opens videostream to webcam
-	public FacialRecognition() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		faceDetector = new CascadeClassifier("lbpcascade_frontalface.xml");
-		eyeDetector = new CascadeClassifier("haarcascade_righteye_2splits.xml");
-		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
-		capture = new VideoCapture(0);
+	public void runFacialRecognition() {
+		if(currentStream) {
+			readFromFile();
+		}
+		else if(!currentStream) {
+			readFromCamera();
+		}
 	}
 	
-	public void runFacialRecognition() {
-		Mat frame = new Mat();
-		capture.open(0);
+	public void readFromCamera() {
 		
+		//System.out.println("Reading from Camera");
 		if(capture.isOpened()) {
-			capture.read(frame);
+			if(!isRecording) {
+				capture.read(frame);
+				if(!frame.empty()) {
+					matToImage(frame);
+					if(detectFaces(frame)) {
+						detectEyes(frame);
+						if(eye != null) {
+							//System.out.println(eye.toString());
+						}
+					} else {
+						eye = null;
+					}
+				}
+			} else {
+				capture.read(frame);
+				recordVideo(frame);
+			}
+		} else {
+			System.err.println("Error: No video device could be opened");
+			System.exit(1);
+		}
+	}
+	
+	public void readFromFile() {
+		//System.out.println("Reading From File");
+		if(faceVideo.listFiles().length > 0 && faceVideoCounter < faceVideo.listFiles().length) {
+		
+			frame = Imgcodecs.imread(faceVideo.listFiles()[faceVideoCounter%faceVideo.listFiles().length].getPath());
 			if(!frame.empty()) {
 				matToImage(frame);
 				if(detectFaces(frame)) {
@@ -93,14 +144,26 @@ public class FacialRecognition implements Runnable
 					if(eye != null) {
 						//System.out.println(eye.toString());
 					}
-				} else {
+				} 
+				else {
 					eye = null;
 				}
-			}	
-		} else {
-			System.err.println("Error: No video device could be opened");
-			System.exit(1);
+			}
+			faceVideoCounter++;
+			
 		}
+		else if(faceVideoCounter >= faceVideo.listFiles().length){
+			faceVideoCounter = 0;
+		}
+		else {
+			System.out.println("No face video file exists");
+		}
+	}
+	
+	public void recordVideo(Mat frame) {
+		Imgcodecs.imwrite("res/FaceVideo/face" + faceCounter + ".png", frame);
+		faceCounter++;
+		System.out.println(faceCounter + " Written to File");
 	}
 	//converts Mat to array of bytes to a buffered image for easier display
 	public void matToImage(Mat original) {
@@ -170,6 +233,14 @@ public class FacialRecognition implements Runnable
 			
 		}
 	}
+
+	public void toggleRecording() {
+		isRecording = !isRecording;
+	}
+	
+	public void toggleStream() {
+		currentStream = !currentStream;
+	}
 	//getter function for the faceFrame
 	public BufferedImage getFaceFrame() {
 		return faceFrame;
@@ -177,6 +248,14 @@ public class FacialRecognition implements Runnable
 	//getter function for the eyeRect/location
 	public EyeRect getEyeRect() {
 		return eye;
+	}
+	
+	public boolean getCurrentStream() {
+		return currentStream;
+	}
+	
+	public boolean getIsRecording() {
+		return isRecording;
 	}
 	public boolean eyesOpen () {
 		return eyesOpen;
