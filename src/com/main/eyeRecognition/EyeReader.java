@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 public class EyeReader {
 
-	private int tolerance = 15;
+	private int tolerance = 50;
 	private double threshold = 0;
 
 	private double openAvg;
