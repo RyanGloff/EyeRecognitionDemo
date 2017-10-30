@@ -10,7 +10,11 @@ import javax.imageio.ImageIO;
 
 public class EyeReader {
 
+<<<<<<< HEAD
 	private int tolerance = 50;
+=======
+	private int tolerance = 30;
+>>>>>>> 208d7a16ff5b517d6f61e9134034a3c6ce12dc7e
 	private double threshold = 0;
 
 	private double openAvg;
@@ -161,7 +165,9 @@ public class EyeReader {
 				int g = c.getGreen();
 				int b = c.getBlue();
 				if (Math.abs(r - b) + Math.abs(r - g) + Math.abs(b - g) < tolerance) {
-					sum++;
+					if (y > img.getHeight() / 2) {
+						sum++;
+					}
 				}
 			}
 		}
