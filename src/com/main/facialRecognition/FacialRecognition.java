@@ -64,7 +64,7 @@ public class FacialRecognition implements Runnable
 	@Override
 	public void run() {
 		eyeReader = new EyeReader();
-		eyeReader.train("res/EyeImages/");
+		eyeReader.train("res/FaceVideo/");
 		JFrame window = new JFrame("Facial Recognition");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(500, 500);
@@ -205,7 +205,7 @@ public class FacialRecognition implements Runnable
 			eye = new EyeRect(eyeArray[0]);
 			// Export to file system for now
 			BufferedImage eyeImg = faceFrame.getSubimage(eye.getX(), eye.getY(), eye.getWidth(), eye.getHeight());
-			System.out.println("Value: " + eyeReader.getWhiteness(eyeImg));
+			System.out.println("Value: " + eyeReader.getWhiteness(eyeImg) + "\tOpen: " + open);
 			eyesOpen = eyeReader.isOpen(eyeImg);
 			
 			//Adding to the training set
