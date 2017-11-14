@@ -19,8 +19,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.VideoWriter;
-import org.opencv.core.Size;
 
 import com.main.eyeRecognition.EyeReader;
 
@@ -55,7 +53,7 @@ public class FacialRecognition implements Runnable
 		frame = new Mat();
 		faceVideo = new File("res/FaceVideo");
 		faceDetector = new CascadeClassifier("lbpcascade_frontalface.xml");
-		eyeDetector = new CascadeClassifier("haarcascade_righteye_2splits.xml");
+		eyeDetector = new CascadeClassifier("haarcascade_lefteye_2splits.xml");
 		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
 		capture = new VideoCapture();
 		capture.open(0);
@@ -63,6 +61,7 @@ public class FacialRecognition implements Runnable
 	
 	@Override
 	public void run() {
+		
 		eyeReader = new EyeReader();
 		JFrame window = new JFrame("Facial Recognition");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,12 +71,17 @@ public class FacialRecognition implements Runnable
 		window.getContentPane().add(label);
 		window.setVisible(true);
 		long startTime = System.nanoTime();
+		double dTime = (double) (startTime)/ 1000000000;
+		
 		while(running) {
-			runFacialRecognition();
-			label.setIcon(new ImageIcon(faceFrame));
-			
+			if(dTime%1000 == 0) {
+				runFacialRecognition();
+				label.setIcon(new ImageIcon(faceFrame));
+				//System.out.println("Displaying face " + faceVideoCounter);	
+			}
+				
 			long currentTime = System.nanoTime();
-			double dTime = (double)(currentTime - startTime) / 1000000000;
+			dTime = (double)(currentTime - startTime) / 1000000000;
 			//System.out.println("Elapsed Time: " + dTime + " seconds");
 			startTime = currentTime;
 		}
