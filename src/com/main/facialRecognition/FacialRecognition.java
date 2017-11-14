@@ -41,7 +41,7 @@ public class FacialRecognition implements Runnable
 	private boolean training = false;
 	private boolean open = true;
 	private boolean isRecording = false;
-	private boolean currentStream = true;
+	private boolean currentStream = false;
 	
 	private Thread thread;
 	private boolean running;
@@ -59,12 +59,11 @@ public class FacialRecognition implements Runnable
 		faceFrame = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
 		capture = new VideoCapture();
 		capture.open(0);
-		}
+	}
 	
 	@Override
 	public void run() {
 		eyeReader = new EyeReader();
-		eyeReader.train("res/FaceVideo/");
 		JFrame window = new JFrame("Facial Recognition");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(500, 500);
@@ -205,7 +204,6 @@ public class FacialRecognition implements Runnable
 			eye = new EyeRect(eyeArray[0]);
 			// Export to file system for now
 			BufferedImage eyeImg = faceFrame.getSubimage(eye.getX(), eye.getY(), eye.getWidth(), eye.getHeight());
-			System.out.println("Value: " + eyeReader.getWhiteness(eyeImg) + "\tOpen: " + open);
 			eyesOpen = eyeReader.isOpen(eyeImg);
 			
 			//Adding to the training set
