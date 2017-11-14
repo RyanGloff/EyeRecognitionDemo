@@ -51,9 +51,7 @@ public class EyeWindow extends Canvas implements Runnable {
 		});
 		addKeyListener(new KeyListener() {
 			@Override
-			public void keyPressed(KeyEvent e) {}
-			@Override
-			public void keyReleased(KeyEvent e) {
+			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_A:
 					fr.getEyeReader().incTolerance();
@@ -96,6 +94,8 @@ public class EyeWindow extends Canvas implements Runnable {
 					break;
 				}
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {}
 			@Override
 			public void keyTyped(KeyEvent e) {}
 		});

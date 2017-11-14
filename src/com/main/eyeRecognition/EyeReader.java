@@ -22,11 +22,7 @@ public class EyeReader {
 	
 	public boolean isOpen (BufferedImage img) {
 		int value = getValue(img, tolerance);
-		if (value > threshold) {
-			return true;
-		} else {
-			return false;
-		}
+		return value > threshold;
 	}
 	
 	public int getValue (BufferedImage img, int tolerance) {
